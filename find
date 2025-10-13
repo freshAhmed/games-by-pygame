@@ -1,0 +1,73 @@
+
+import pygame
+ 
+
+
+def joinimagetile(pos,size,angle,images):
+ width,height=size
+ topimage,bottomimage=images
+ if angle==0:
+  suface=pygame.Surface((width,height))
+  suface.blit(topimage,(0,0),(0,0,width,70))
+  suface.blit(bottomimage,(0,75),(0,0,width,70))
+ else:
+  suface=pygame.Surface((height,width))
+  suface.blit(topimage,(75,0),(0,0,width,70))
+  suface.blit(bottomimage,(0,0),(0,0,width,70))
+ 
+ return suface
+
+class Tile(pygame.sprite.Sprite):
+ def __init__(self,pos,imagepartes_tile,size,pips):
+  
+  pygame.sprite.Sprite.__init__(self)
+  self.pips=pips
+  self.pos=pygame.Vector2(pos)
+  self.imagespartes =imagepartes_tile
+  self.image=joinimagetile(pos,size,0,self.imagespartes)
+  self.rect=self.image.get_rect(center=self.pos)
+  self.angle=0
+  self.flag=False #to control what tile allowed to play
+  self.size=size
+  self.dir=''
+
+ def update(self,*args,**kwargs):
+  # print(self.angle)
+  self.render()
+  self.updatesize()
+  
+ def render(self):
+  width,height=self.size
+  
+  image=joinimagetile(self.pos,self.size,self.angle,self.imagespartes)
+  if self.angle==0:
+   surface=pygame.Surface((width,height))
+   surface.blit(image,(0,0),(0,0,width,height))
+  else:
+   surface=pygame.Surface((height,width))
+   surface.blit(image,(0,0),(0,0,height,width))
+  self.image=surface
+  self.rect=self.image.get_rect(center=self.pos)
+ def checkpips_and_angle(self):
+  leftpip,rightpip=self.pips
+  if leftpip==rightpip:
+   self.angle=0
+  else:
+   self.angle=1
+
+ def walk(self,pos,speed):
+  self.updatepos(pos)
+  self.pos.move_towards_ip(self.pos,speed)  
+ 
+ def updatepos(self,pos):
+  self.pos=pygame.Vector2(pos)
+  self.update()
+
+ 
+ def getpips(self):
+  return self.pips['leftpip'],self.pips['rightpip']
+ def updatesize(self):
+  self.width,self.height=self.rect.size
+ def getpos(self):
+  return self.pos
+ 

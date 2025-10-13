@@ -1,0 +1,62 @@
+
+
+
+{
+    "Main":{
+     "loggingFormat":"[>> %(asctime)s <<] [>> %(levelname)s <<]  %(message)s",
+     
+     "Width":1500,
+     "height":800,
+     "Background":[0,255,0],
+     "gameState":"running",
+     "Game_Loop_state":true,
+     "dir_tiles_images":"./tiles_images",
+     "number_tiles":7,
+     "imageWidth":70,
+     "imageHieght":145,
+     "Arena":{
+       "size":[
+        1500,
+        800
+       ],
+       "pos":[
+        750,
+        400
+       ], 
+        "Background":[0,255,0],
+        "type_buttons":["settings","restart","exit"]
+     },
+    "Player0":{
+      "size":[
+       1500,
+       170
+      ],
+      "pos":[
+      750,
+      110
+      ],
+     "margen":[
+        16,
+        16
+     ],
+      "Background":[198,245,81]
+    },
+    "Player1":{
+    "size":[
+     1500,
+     170
+    ],
+    "pos":[
+      750,
+      720
+    ],
+    "margen":[
+        16,
+        16
+    ],
+      "Background":[198,245,81]
+    }
+    }
+  
+
+}
