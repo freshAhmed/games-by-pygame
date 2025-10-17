@@ -13,45 +13,23 @@ class Mouse(pygame.sprite.Group):
   self.arena=arena
 
   
- def click(self,gamestate):
+ def click(self,gamestate,pos):
+
   gamestate=self.arena.navbar.click(self.pos) 
-   
   playerindex=self.arena.playerindex
   player=self.arena.players[playerindex]
   if player.deck.rect.collidepoint(self.pos):
     self.tile=player.deck.chosetile(self.pos)
-    if self.tile:
+ 
+  if self.tile:
+    #  log.info(self.tile.getpips())   
+     
      side=self.arena.checkside(self.tile)
-     self.arena.remove(*[self.arena.transparentcentertile,
-                         self.arena.transparentlefttile,
-                         self.arena.transparentrighttile])
      self.arena.add_transparent_tiles(self.tile,side)
-  elif self.tile is not None and self.arena.rect.collidepoint(self.pos):
-   if self.arena.transparentcentertile and self.arena.transparentcentertile.rect.collidepoint(self.pos):
-    self.tile.updateangle()
-    self.arena.addtile(self.tile,self.arena.transparentcentertile.getpos(),'')
-    self.arena.remove(*[self.arena.transparentcentertile,
-                        self.arena.transparentlefttile,
-                        self.arena.transparentrighttile])
-    self.arena.playerindex=1 if playerindex==0 else 0
+  if self.arena.press(self.tile,self.pos):
     self.tile=None
-   elif self.arena.transparentlefttile and self.arena.transparentlefttile.rect.collidepoint(self.pos):
-    self.tile.updateangle()
-    self.arena.addtile(self.tile,self.arena.transparentlefttile.getpos(),'left')
-    self.arena.remove(*[self.arena.transparentcentertile,
-                        self.arena.transparentlefttile,
-                        self.arena.transparentrighttile])
-    self.arena.playerindex=1 if playerindex==0 else 0
-    self.tile=None
-   elif self.arena.transparentrighttile and  self.arena.transparentrighttile.rect.collidepoint(self.pos):
-    self.tile.updateangle()
-    self.arena.addtile(self.tile,self.arena.transparentrighttile.getpos(),'right')
-    self.arena.remove(*[self.arena.transparentcentertile,
-                        self.arena.transparentlefttile,
-                        self.arena.transparentrighttile])
-    self.arena.playerindex=1 if playerindex==0 else 0
-    self.tile=None
-
+  
+   
   return gamestate
  
  def Move(self,pos):
