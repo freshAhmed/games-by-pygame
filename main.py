@@ -15,12 +15,12 @@ def gettiles(dirname='./tiles_images',numbertiles=7,width=70,hieght=145):
  pathimagetiles=sorted(pathimagetiles)
  ntiles=0
  l=[]
+ imagestiles={}
  for path in pathimagetiles:
   topimage=pygame.image.load(os.path.join(dirname,path))
   for i in range(ntiles,numbertiles):
-   bottomimage=pygame.image.load(os.path.join(dirname,pathimagetiles[i]))
-   tileimage=(bottomimage,topimage)
-   l.append(Tile((0,0),[[ntiles,i],tileimage],(width,hieght),{'leftpip':ntiles,'rightpip':i}))
+   imagestiles[i]=topimage  
+   l.append(Tile((0,0),imagestiles,(width,hieght),[ntiles,i]))
   ntiles+=1
  random.shuffle(l)
  return l
@@ -62,6 +62,7 @@ def checkStateGame(itemsgame=[],gameData={}):
                 tuple(gameData.get('Arena')['size']),
                 tuple(gameData.get('Arena')['Background']),
                 [itemsgame['Player0'],itemsgame['Player1']])
+  itemsgame['mouse']=Mouse([],(0,0),itemsgame['arena'])
   gameData['gameState']=''
  elif gameData.get('gameState')=='exit':
      pygame.quit()
@@ -115,19 +116,21 @@ def main():
      pygame.quit()
      data['Game_Loop_state']=False
    if event.type==pygame.MOUSEBUTTONDOWN:
-    data['gameState']= mouse.click(gamestate)
-   elif event.type==pygame.MOUSEMOTION:
+    data['gameState']= mouse.click(gamestate,event.pos)
+   if event.type==pygame.MOUSEMOTION:
      mouse.Move(event.pos)
    elif event.type==pygame.MOUSEBUTTONUP:
     mouse.flagDragDrop=False
    list_item=checkStateGame({
    'Player0':Player0,
    'Player1':Player1,
-   'arena':arena
+   'arena':arena,
+   'mouse':mouse
   },data) 
    Player0=list_item["Player0"]
    Player1=list_item["Player1"]
    arena=list_item["arena"]
+   mouse=list_item['mouse']
   render(screen,[Player0,
                  Player1,
                  arena])
