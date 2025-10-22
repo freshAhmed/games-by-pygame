@@ -7,7 +7,7 @@ import random
 from player import Player
 import logging
 import json
-
+from Boneyard import Boneyard
 def gettiles(dirname='./tiles_images',numbertiles=7,width=70,hieght=145):
  pathimagetiles=os.listdir(dirname)
  log=logging.getLogger('__main__')
@@ -34,10 +34,8 @@ def loadData(filename):
  except json.JSONDecodeError:
   pass
 def render(screen,itemsGame):
-  itemsGame[2].render(screen)
-
-  itemsGame[0].render(screen)
-  itemsGame[1].render(screen)
+  for i in itemsGame:
+   i.render(screen)
 
 def checkStateGame(itemsgame=[],gameData={}):
 #  log=logging.getLogger('')
@@ -62,7 +60,14 @@ def checkStateGame(itemsgame=[],gameData={}):
                 tuple(gameData.get('Arena')['size']),
                 tuple(gameData.get('Arena')['Background']),
                 [itemsgame['Player0'],itemsgame['Player1']])
-  itemsgame['mouse']=Mouse([],(0,0),itemsgame['arena'])
+  itemsgame['boneyard']=Boneyard(tiles[14:],
+                   gameData.get('boneyard')['pos'],
+                   gameData.get('boneyard')['size'],
+                   gameData.get('boneyard')['scale'],
+                   gameData.get('boneyard')['Background'],
+                   gameData.get('boneyard')['display'])
+  itemsgame['mouse']=Mouse([],(0,0),itemsgame['arena'],itemsgame['boneyard'])
+  
   gameData['gameState']=''
  elif gameData.get('gameState')=='exit':
      pygame.quit()
@@ -102,11 +107,19 @@ def main():
                 tuple(data.get('Player0')['margen']),
                 tuple(data.get('Player0')['Background']),
                 tiles[7:14])
+
+ boneyard=Boneyard(tiles[14:],
+                   data.get('boneyard')['pos'],
+                   data.get('boneyard')['size'],
+                   data.get('boneyard')['scale'],
+                   data.get('boneyard')['Background'],
+                   data.get('boneyard')['display'])
+ 
  arena=Arena([],tuple(data.get('Arena')['pos']),
                 tuple(data.get('Arena')['size']),
                 tuple(data.get('Arena')['Background']),
                 [Player0,Player1])
- mouse=Mouse([],(0,0),arena)
+ mouse=Mouse([],(0,0),arena,boneyard)
 
 
  while running:
@@ -118,6 +131,7 @@ def main():
    if event.type==pygame.MOUSEBUTTONDOWN:
     data['gameState']= mouse.click(gamestate,event.pos)
    if event.type==pygame.MOUSEMOTION:
+     
      mouse.Move(event.pos)
    elif event.type==pygame.MOUSEBUTTONUP:
     mouse.flagDragDrop=False
@@ -125,15 +139,17 @@ def main():
    'Player0':Player0,
    'Player1':Player1,
    'arena':arena,
-   'mouse':mouse
+   'mouse':mouse,
+   "boneyard":boneyard
   },data) 
    Player0=list_item["Player0"]
    Player1=list_item["Player1"]
    arena=list_item["arena"]
    mouse=list_item['mouse']
-  render(screen,[Player0,
+   boneyard=list_item["boneyard"]
+  render(screen,[arena,boneyard,Player0,
                  Player1,
-                 arena])
+                 ])
 
   pygame.display.flip()
   clock.tick(60)
