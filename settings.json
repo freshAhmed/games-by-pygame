@@ -3,7 +3,7 @@
 
 {
     "Main":{
-     "loggingFormat":"[>> %(asctime)s <<] [>> %(levelname)s <<]  %(message)s",
+     "loggingFormat":"[>> %(filename)s << ] [>> %(asctime)s <<] [>> %(levelname)s <<]  %(message)s",
      
      "Width":1500,
      "height":800,
@@ -29,7 +29,7 @@
     "Player0":{
       "size":[
        1500,
-       170
+       110
       ],
       "pos":[
       750,
@@ -44,7 +44,7 @@
     "Player1":{
     "size":[
      1500,
-     170
+     110
     ],
     "pos":[
       750,
@@ -55,7 +55,21 @@
         16
     ],
       "Background":[198,245,81]
+    },
+    "boneyard":{
+      "size":[
+       570,
+        280
+      ],
+      "scale":0.7,
+      "Background":[0,205,0,50],
+      "pos":[750,400],
+      "display":false
+      
+
+
     }
+
     }
   
 
