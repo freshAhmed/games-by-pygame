@@ -4,20 +4,21 @@ import logging
 log=logging.getLogger('__main__')
 
 
-def joinimagetile(pos,size,angle,images):
+def joinimagetile(pos,size,angle,images,scale):
  width,height=size
 
  topimage,bottomimage=images
  if angle==0:
-  suface=pygame.Surface((width,height))
-  suface.blit(topimage,(0,0),(0,0,width,70))
-  suface.blit(bottomimage,(0,75),(0,0,width,70))
+  surface=pygame.Surface((width,height))
+  
+  surface.blit(topimage,(0,0),(0,0,width,70))
+  surface.blit(bottomimage,(0,75),(0,0,width,70))
  else:
-  suface=pygame.Surface((height,width))
-  suface.blit(topimage,(75,0),(0,0,width,70))
-  suface.blit(bottomimage,(0,0),(0,0,width,70))
+  surface=pygame.Surface((height,width))
+  surface.blit(topimage,(75,0),(0,0,width,70))
+  surface.blit(bottomimage,(0,0),(0,0,width,70))
  
- return suface
+ return pygame.transform.scale_by(surface,scale)
 
 class Tile(pygame.sprite.Sprite):
  def __init__(self,pos,imagestiles,size,pips):
@@ -26,9 +27,12 @@ class Tile(pygame.sprite.Sprite):
   self.pips=pips
   self.pos=pygame.Vector2(pos)
   self.imagestiles =imagestiles
+  self.scale=1
+
   topimage=self.imagestiles[self.pips[0]]
   bottomimage=self.imagestiles[self.pips[1]]
-  self.image=joinimagetile(pos,size,0,[topimage,bottomimage])
+
+  self.image=joinimagetile(pos,size,0,[topimage,bottomimage],self.scale)
   self.rect=self.image.get_rect(center=self.pos)
   self.angle=0
   self.flag=False #to control what tile allowed to play
@@ -42,9 +46,11 @@ class Tile(pygame.sprite.Sprite):
   
  def render(self):
   width,height=self.size
+  width=width*self.scale
+  height=height*self.scale
   topimage=self.imagestiles[self.pips[1]]
   bottomimage=self.imagestiles[self.pips[0]]
-  image=joinimagetile(self.pos,self.size,self.angle,[topimage,bottomimage])
+  image=joinimagetile(self.pos,self.size,self.angle,[topimage,bottomimage],self.scale)
   if self.angle==0:
    surface=pygame.Surface((width,height))
    surface.blit(image,(0,0),(0,0,width,height))
@@ -73,7 +79,9 @@ class Tile(pygame.sprite.Sprite):
  def getpips(self):
   return self.pips
  def updatesize(self):
+   
   self.width,self.height=self.rect.size
+
  def getpos(self):
   return self.pos
  def updateangle(self):
@@ -83,6 +91,7 @@ class Tile(pygame.sprite.Sprite):
   else:
    self.angle=0
  def rotate(self,pips,side):
+
   tilepips=self.getpips()
   previousepips=tuple(self.getpips())
   if side=='right':
@@ -94,5 +103,6 @@ class Tile(pygame.sprite.Sprite):
      self.pips=tuple(reversed(self.pips))
   else:
    pass
-  log.info(f'the tile pips is {self.pips} and previouspips is {previousepips} and arean pips is {pips}')
-  
+
+ def updatescale(self,scale):
+   self.scale=scale
