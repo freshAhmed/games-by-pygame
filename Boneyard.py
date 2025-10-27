@@ -14,7 +14,7 @@ class Boneyard(pygame.sprite.Group):
         self.image=pygame.Surface(self.size)
     
         self.margen=margen
-        self.display=True
+        self.display=display
         self.rect=self.image.get_rect(center=self.pos) 
         self.addtiles(sprites)
     def addtiles(self,tiles):
@@ -30,7 +30,8 @@ class Boneyard(pygame.sprite.Group):
         self.add(tile)
 
     def render(self,screen,*args,**kwargs):
-    #  if self.display:
+    #  log.info(self.display)s
+     if self.display :
       self.image=pygame.Surface(self.size,pygame.SRCALPHA)
       self.image.fill(self.background)
       screen.blit(self.image,(self.rect.left,self.rect.top,*self.size))
@@ -56,4 +57,15 @@ class Boneyard(pygame.sprite.Group):
     
     def removetile(self,tile):
        self.remove(tile)
-   
+    
+    def press(self,pos,player,prev_pips):
+       if self.display and self.rect.collidepoint(pos):
+        tile=self.chosetile(pos)
+        if tile is not None:
+         self.removetile(tile)
+         player.deck.addtile(tile)   
+         tilepips=tile.getpips()
+         if (tilepips[0]==prev_pips[0] or tilepips[0]==prev_pips[1]) or (tilepips[1]==prev_pips[0] or tilepips[1]==prev_pips[1]):
+          self.display=False
+         
+       return player

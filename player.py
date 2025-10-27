@@ -13,7 +13,8 @@ class Deck(pygame.sprite.Group):
   self.scale=0.8
   self.dectpips=[]
  def render(self,screen):
-  # pygame.draw.rect(screen,self.background,self.rect)
+
+  self.rearange()
   self.draw(screen)
 
  def addtile(self,tile):
@@ -21,10 +22,10 @@ class Deck(pygame.sprite.Group):
   tiles=self.sprites()
   xoffset,yoffset=tiles[-1:][0].pos
   tile.updatepos((xoffset+tile.size[0],yoffset))
-
-
   tile.updatescale(self.scale) 
+  self.dectpips.append(tile.getpips())
   self.add(tile)
+ 
  
  def addtiles(self, tiles):
   offsetx=self.rect.centerx//1.8
@@ -43,6 +44,7 @@ class Deck(pygame.sprite.Group):
    if (pip[0]==tilepips[0] and pip[1]==tilepips[1] ) or (pip[0]==tilepips[1] and pip[1]==tilepips[0]):
     self.dectpips.remove(pip)
   self.remove(tile)
+
  
  def chosetile(self,pos):
   tiles=self.sprites()
@@ -51,8 +53,16 @@ class Deck(pygame.sprite.Group):
     return tile
   return None
 
-
-
+ def rearange(self):
+  tiles=self.sprites()
+  if len(tiles)>0: 
+   total_width=(tiles[0].size[0]*len(tiles))
+   rest_width=abs(self.size[0]-total_width)
+   offsetx=rest_width//2-self.margen[0]*2
+   offsety=self.rect.centery
+   for tile in tiles  :
+    offsetx+=tile.size[0]
+    tile.updatepos((offsetx,offsety))
 
 class Player():
 
@@ -76,3 +86,8 @@ class Player():
      return True
   return False 
 
+ def get_tile(self,pos,prev_pips):
+  if self.deck.rect.collidepoint(pos):
+   if self.checkpips(prev_pips):
+    return self.deck.chosetile(pos)
+  return None
