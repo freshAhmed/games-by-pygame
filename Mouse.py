@@ -16,18 +16,15 @@ class Mouse(pygame.sprite.Group):
   playerindex=self.arena.playerindex
   player=self.arena.players[playerindex]
   arena_previouspips=self.arena.getcurrentspips()
-  if player.deck.rect.collidepoint(self.pos):
-    if player.checkpips(arena_previouspips):
-     self.tile=player.deck.chosetile(self.pos)
-  if self.boneyard.display and self.boneyard.rect.collidepoint(self.pos):
-      tile=self.boneyard.chosetile(self.pos)
-      if tile is not None:
-       self.boneyard.removetile(tile)
-       player.deck.addtile(tile)
-       tilepips=tile.getpips()
-       if (tilepips[0]==arena_previouspips[0] or tilepips[0]==arena_previouspips[1]) or (tilepips[1]==arena_previouspips[0] or tilepips[1]==arena_previouspips[1]):
-        #  self.boneyard.display=False
-        pass
+  tile=player.get_tile(self.pos,arena_previouspips)
+  player=self.boneyard.press(self.pos,player,arena_previouspips)
+
+  if tile :
+    self.tile=tile
+  if len(self.boneyard.sprites())==0:
+
+    self.arena.playerindex=0 if self.arena.playerindex==1 else 1
+
 
   if self.tile:
      side=self.arena.checkside(self.tile)
@@ -40,6 +37,6 @@ class Mouse(pygame.sprite.Group):
  
  def Move(self,pos):
   player= self.arena.players[self.arena.playerindex]
-  # self.boneyard.display=True if not player.checkpips(self.arena.getcurrentspips()) else False 
+  self.boneyard.display=True if (not player.checkpips(self.arena.getcurrentspips()) and not len(self.boneyard.sprites())==0 )else False 
   self.pos=pygame.Vector2(pos)
 
