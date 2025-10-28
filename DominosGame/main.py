@@ -8,7 +8,7 @@ from player import Player
 import logging
 import json
 from Boneyard import Boneyard
-def gettiles(dirname='./tiles_images',numbertiles=7,width=70,hieght=145):
+def gettiles(dirname='games-by-pygame/DominosGame/tiles_images',numbertiles=7,width=70,hieght=145):
  pathimagetiles=os.listdir(dirname)
  log=logging.getLogger('__main__')
 
@@ -81,7 +81,7 @@ def checkStateGame(itemsgame=[],gameData={}):
 
 def main():
  #settings
- data=dict(loadData('settings.json'))['Main'] 
+ data=dict(loadData('games-by-pygame/DominosGame/settings.json'))['Main'] 
  
  logging.basicConfig(format=data.get("loggingFormat"), level=logging.DEBUG)
  log=logging.getLogger('__main__')
