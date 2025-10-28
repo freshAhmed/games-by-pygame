@@ -10,7 +10,7 @@
      "Background":[0,255,0],
      "gameState":"running",
      "Game_Loop_state":true,
-     "dir_tiles_images":"./tiles_images",
+     "dir_tiles_images":"games-by-pygame/DominosGame/tiles_images",
      "number_tiles":7,
      "imageWidth":70,
      "imageHieght":145,
