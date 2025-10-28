@@ -7,7 +7,7 @@ log=logging.getLogger("__main__")
 
 class Navbar(pygame.sprite.Group):
     def __init__(self, sprites=[],pos=(0,0),size=(0,0),color=(0,0,0),
-                 dirname='./navbar_icons',
+                 dirname='games-by-pygame/DominosGame/navbar_icons',
                  type_buttons=["settings","restart","exit"]):
         super().__init__(*sprites)
 
